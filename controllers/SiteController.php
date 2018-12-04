@@ -146,4 +146,14 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionPlacement()
+    {
+        return $this->render('placement');
+    }
+
+    public function actionBattle()
+    {
+        return $this->render('battle');
+    }
 }
