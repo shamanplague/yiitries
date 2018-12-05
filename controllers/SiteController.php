@@ -149,11 +149,17 @@ class SiteController extends Controller
 
     public function actionPlacement()
     {
+        $this->layout = 'placement_view';
         return $this->render('placement');
     }
 
     public function actionBattle()
     {
         return $this->render('battle');
+    }
+
+    public function actionGreeting()
+    {
+        return $this->render('greeting');
     }
 }

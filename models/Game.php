@@ -19,29 +19,40 @@ class game extends Model
 
     public function __construct()
     {
+//        $this->users_field = new Field();
+//        $this->ai_field = new Field();
 
-        $this->users_field = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field = ["s", "e", "s", "s", "s", "e", "e", "e", "s", "e"];
-        $this->users_field = ["s", "e", "e", "e", "e", "e", "e", "e", "s", "e"];
-        $this->users_field = ["s", "e", "s", "s", "s", "e", "e", "e", "e", "e"];
-        $this->users_field = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field = ["e", "e", "e", "e", "e", "s", "e", "s", "e", "e"];
-        $this->users_field = ["e", "s", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field = ["e", "s", "e", "s", "e", "e", "e", "e", "e", "e"];
-        $this->users_field = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
-        $this->users_field = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
 
-        $this->ai_field = ["s", "e", "e", "s", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field = ["s", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field = ["e", "e", "e", "s", "e", "e", "e", "e", "s", "e"];
-        $this->ai_field = ["e", "e", "e", "s", "e", "e", "e", "e", "e", "e"];
-        $this->ai_field = ["e", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
-        $this->ai_field = ["e", "e", "s", "s", "s", "e", "e", "s", "e", "e"];
-        $this->ai_field = ["s", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
-        $this->ai_field = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->ai_field = ["e", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field = ["s", "s", "s", "s", "e", "e", "e", "e", "e", "e"];
+        $this->users_field[0] = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
+        $this->users_field[1] = ["s", "e", "s", "s", "s", "e", "e", "e", "s", "e"];
+        $this->users_field[2] = ["s", "e", "e", "e", "e", "e", "e", "e", "s", "e"];
+        $this->users_field[3] = ["s", "e", "s", "s", "s", "e", "e", "e", "e", "e"];
+        $this->users_field[4] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
+        $this->users_field[5] = ["e", "e", "e", "e", "e", "s", "e", "s", "e", "e"];
+        $this->users_field[6] = ["e", "s", "e", "e", "e", "e", "e", "e", "e", "e"];
+        $this->users_field[7] = ["e", "s", "e", "s", "e", "e", "e", "e", "e", "e"];
+        $this->users_field[8] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
+        $this->users_field[9] = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
 
+        $this->ai_field[0] = ["s", "e", "e", "s", "e", "e", "s", "e", "e", "e"];
+        $this->ai_field[1] = ["s", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
+        $this->ai_field[2] = ["e", "e", "e", "s", "e", "e", "e", "e", "s", "e"];
+        $this->ai_field[3] = ["e", "e", "e", "s", "e", "e", "e", "e", "e", "e"];
+        $this->ai_field[4] = ["e", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
+        $this->ai_field[5] = ["e", "e", "s", "s", "s", "e", "e", "s", "e", "e"];
+        $this->ai_field[6] = ["s", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
+        $this->ai_field[7] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
+        $this->ai_field[8] = ["e", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
+        $this->ai_field[9] = ["s", "s", "s", "s", "e", "e", "e", "e", "e", "e"];
+
+    }
+
+    public function hitResult($row, $col){
+
+        if ($this->ai_field[$row][$col] == 's')
+            $this->ai_field[$row][$col] = 'c';
+        else
+            $this->ai_field[$row][$col] = 'm';
     }
 
     public function winner()

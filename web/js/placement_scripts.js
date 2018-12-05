@@ -41,6 +41,8 @@ function placeShip(object){
 
             deck_number = pre_field.shift();
         if (deck_number == 0){
+            document.write("Игра начинается!");
+            setTimeout(function () {document.location.href = '/?action=battle';}, 2000);
             console.log(field_for_placement);
         }
     }
@@ -56,6 +58,8 @@ function placeShip(object){
         }
             deck_number = pre_field.shift();
         if (deck_number == 0){
+            document.write("Игра начинается!");
+            setTimeout(function () {document.location.href = '/?action=battle';}, 2000);
             console.log(field_for_placement);
         }
 

@@ -6,9 +6,7 @@ function playViewForAI() {
         document.write('<br>');
         for (var j = 0; j < 10; j++) {
             var index = String(i) + String(j) + '_AI';
-            document.write("<a name='" + index +
-                "' href='/battleship/battleship.php?x=" + i + "&y=" + j +
-                "'><img id = '" + index + "' width='30' onmouseout='defineColor(this, ai_field, true) ' onmouseover='makeRed(this)'></a> ");
+            document.write("<img id = '" + index + "' onclick='move(this)' onmouseout='defineColor(this, ai_field, true) ' onmouseover='makeRed(this)'>");
 
             defineColor(document.getElementById(index), ai_field, true);
 
@@ -19,6 +17,14 @@ function playViewForAI() {
 
 }
 
+function move(object) {
+    //console.log(object.id);
+    var x = object.id.substring(0,1);
+    var y = object.id.substring(1,2);
+    //console.log('/?action=battle&x=' + x + '&y=' + y);
+    document.location.href = '/?action=move&x=' + x + '&y=' + y;
+}
+
 function playViewForUser() {
 
     document.write("<div style='text-align: center; width: 50%; display: inline-block;'>");
@@ -27,7 +33,7 @@ function playViewForUser() {
         document.write('<br>');
         for (j = 0; j < 10; j++) {
             var index = String(i) + String(j);
-            document.write("<img id = '" + index + "' width='30'> ");
+            document.write("<img id = '" + index + "'>");
 
             defineColor(document.getElementById(index), users_field);
 
@@ -38,16 +44,18 @@ function playViewForUser() {
 
 }
 
-function defineColor(cell) {
+function defineColor(cell, field, forAi=false) {
 
     var row = Number(cell.id.substring(0, 1));
     var col = Number(cell.id.substring(1, 2));
 
-    switch (field_for_placement[row][col]) {
+    switch (field[row][col]) {
         case 'e':
             makeBlue(cell);
             break;
         case 's':
+            if(forAi) makeBlue(cell);
+            else
             makeYellow(cell);
             break;
         case 'm':
