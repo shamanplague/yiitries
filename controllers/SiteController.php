@@ -12,7 +12,6 @@ use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
 use app\models\Game;
-use app\models\Field;
 
 class SiteController extends Controller
 {
@@ -196,11 +195,9 @@ class SiteController extends Controller
         $y = ( isset($_POST['y']) ) ? $_POST['y']:null;
         $player = ( isset($_POST['player']) ) ? $_POST['player']:null;
 
-        $request = "UPDATE game SET state = 's' WHERE game_id = 0 AND field_owner = '".$player."' AND x = ".$x." AND y =".$y;
-
-        Yii::$app->db->createCommand($request)->execute();
-
-        return print_r($_POST);
+        $cellForUpdate = Game::findOne(['field_owner' => $player, 'x' => $x, 'y' => $y]);
+        $cellForUpdate->state = 's';
+        $cellForUpdate->update();
 
     }
 
@@ -218,9 +215,11 @@ class SiteController extends Controller
 
         $currentGame = Game::getGame(0);
         $result =  $currentGame->hitResult($x, $y, $player);
-        //$currentGame->write();
-        $request = "UPDATE game SET state = '".$result."' WHERE field_owner = '".$player."' AND x = ".$x." AND y =".$y;
-        Yii::$app->db->createCommand($request)->execute();
+
+        $cellForUpdate = Game::findOne(['field_owner' => $player, 'x' => $x, 'y' => $y]);
+        $cellForUpdate->state = $result;
+        $cellForUpdate->update();
+
         return $result;
 
     }

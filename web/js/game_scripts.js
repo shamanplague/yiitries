@@ -73,7 +73,6 @@ function getField(owner) {
     var resultField = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());;
 
     for(var cell in recieved_field){
-        //console.log(recieved_field[cell]);
         var currentCell = recieved_field[cell];
         var x = currentCell.x;
         var y = currentCell.y;
@@ -117,11 +116,8 @@ function move(object) {
 
         document.write("<div align ='center'>Переход хода! Теперь бьёт " + nextplayer + "!");
 
-        document.write("<br><a href=http://yiitries.local/index.php?r=site%2Fbattle&player=" + nextplayer + ">Готов!</a></div>")
-
-        // setTimeout(function () {
-        //     document.location.href = 'http://yiitries.local/index.php?r=site%2Fbattle&player=' + nextplayer;
-        // }, 2000);
+        document.write("<br><a href=http://yiitries.local/index.php?r=site%2Fbattle&player="
+            + nextplayer + ">Готов!</a></div>")
 
     }
 

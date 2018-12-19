@@ -28,6 +28,8 @@ function filling() {
     pre_field = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1, 0];
     deck_number = pre_field.shift();
 
+    document.write("<h3 align='center'>Расстановка кораблей для " + player + "</h3>");
+
     document.write("<input type='checkbox' name='vertical'><label for='vertical'>Вертикальное размещение</label><br>");
 
     for (var i = 0; i < 10; i++) {
@@ -70,7 +72,6 @@ function placeShip(object){
                 url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
                 type: "POST",
                 data: 'x=' + String(Number(row) + Number(i)) + '&y=' + col + '&player=' + player
-                //contentType: "application/json"
             });
 
         }
@@ -111,7 +112,6 @@ function placeShip(object){
                 url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
                 type: "POST",
                 data: 'x=' + row + '&y=' + String(Number(col) + Number(i)) + '&player=' + player
-                //contentType: "application/json"
             });
 
         }

@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -15,8 +14,9 @@ use yii\db\ActiveRecord;
 class Game extends ActiveRecord
 {
 
-    public $fieldForPlayerOne;
-    public $fieldForPlayerTwo;
+    private $fieldForPlayerOne;
+
+    private $fieldForPlayerTwo;
 
     public function __construct()
     {
@@ -119,7 +119,7 @@ class Game extends ActiveRecord
                 break;
         }
 
-        return 'x='.$x.'y='.$y.'player='.$player;
+        return true;
     }
 
     public function getWinner()
@@ -158,37 +158,38 @@ class Game extends ActiveRecord
     public function write()
     {
 
-        Yii::$app->db->createCommand(
-            "DELETE FROM game WHERE id > 0"
-        )->execute();
+        Game::deleteAll(['field_owner' => 'PlayerOne']);
 
         $cells = $this->fieldForPlayerOne->getCells();
 
         foreach ($cells as $cell){
-            Yii::$app->db->createCommand(
-                "INSERT INTO game (game_id, field_owner, x, y, state) VALUES (0, '".
-                $this->fieldForPlayerOne->getOwner()."', ".
-                $cell->getX().", " .
-                $cell->getY().", '" .
-                $cell->getState()."')"
-            )->execute();
+
+            $gameForRecord = new Game();
+            $gameForRecord->game_id = 0;
+            $gameForRecord->field_owner = 'PlayerOne';
+            $gameForRecord->x = $cell->getX();
+            $gameForRecord->y = $cell->getY();
+            $gameForRecord->state = $cell->getState();
+            $gameForRecord->save();
+
+
         }
 
+        Game::deleteAll(['field_owner' => 'PlayerTwo']);
 
-//        Yii::$app->db->createCommand(
-//            "DELETE FROM game WHERE field_owner='".$this->fieldForPlayerTwo->getOwner()."'"
-//        )->execute();
-
-        $cells = $this->fieldForPlayerTwo->getCells();
+        $cells = $this->fieldForPlayerOne->getCells();
 
         foreach ($cells as $cell){
-            Yii::$app->db->createCommand(
-                "INSERT INTO game (game_id, field_owner, x, y, state) VALUES (0, '".
-                $this->fieldForPlayerTwo->getOwner()."', ".
-                $cell->getX().", " .
-                $cell->getY().", '" .
-                $cell->getState()."')"
-            )->execute();
+
+            $gameForRecord = new Game();
+            $gameForRecord->game_id = 0;
+            $gameForRecord->field_owner = 'PlayerTwo';
+            $gameForRecord->x = $cell->getX();
+            $gameForRecord->y = $cell->getY();
+            $gameForRecord->state = $cell->getState();
+            $gameForRecord->save();
+
+
         }
 
     }

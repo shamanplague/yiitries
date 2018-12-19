@@ -12,7 +12,7 @@ use Yii;
 
 class Field
 {
-
+const DIMENTION = 10;
 private $cells;
 private $owner;
 
@@ -22,8 +22,8 @@ public function __construct($user)
     $this->owner = $user;
 
 
-    for ($x = 0; $x < 10; $x++)
-        for ($y = 0; $y < 10; $y++)
+    for ($x = 0; $x < self::DIMENTION; $x++)
+        for ($y = 0; $y < self::DIMENTION; $y++)
             $this->cells[] = new Cell($x, $y);
 }
 
