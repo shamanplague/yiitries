@@ -1,16 +1,32 @@
 function filling() {
 
-    //console.log(deck_number);
+    player = findGetParameter('player');
+
+    var recieved_field = $.ajax({
+        type: "GET",
+        url: "http://yiitries.local/index.php?r=site%2Fgetfield",
+        async: false,
+        data:  'player=' + player,
+        dataType: 'json'
+    }).responseText;
+
+    recieved_field = JSON.parse(recieved_field);
+
+    console.log(recieved_field);
+
+    field_for_placement = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());;
+
+    for(var cell in recieved_field){
+        //console.log(recieved_field[cell]);
+        var currentCell = recieved_field[cell];
+        var x = currentCell.x;
+        var y = currentCell.y;
+        var state = currentCell.state;
+        field_for_placement[x][y] = state;
+    }
 
     pre_field = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1, 0];
     deck_number = pre_field.shift();
-    field_for_placement = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());
-
-    for (var i = 0; i < 10; i++) {
-        for (var j = 0; j < 10; j++) {
-            field_for_placement[i][j] = 'e';
-        }
-    }
 
     document.write("<input type='checkbox' name='vertical'><label for='vertical'>Вертикальное размещение</label><br>");
 
@@ -25,6 +41,19 @@ function filling() {
     }
 }
 
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
 function placeShip(object){
 
     if (!isAvailable(object)) return;
@@ -37,14 +66,36 @@ function placeShip(object){
         for(var i = 0; i < deck_number; i++) {
             field_for_placement[row + i][col] = 's';
 
+            $.ajax({
+                url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
+                type: "POST",
+                data: 'x=' + String(Number(row) + Number(i)) + '&y=' + col + '&player=' + player
+                //contentType: "application/json"
+            });
+
         }
 
             deck_number = pre_field.shift();
-        if (deck_number == 0){
-            document.write("Игра начинается!");
-            setTimeout(function () {document.location.href = '/?action=battle';}, 2000);
-            console.log(field_for_placement);
+        if (deck_number == 0) {
+            if (player == 'PlayerOne') {
+
+                document.write("<h1 align='center'>Расстановка кораблей второго игрока!</h1>");
+                setTimeout(function () {
+                    document.location.href = 'http://yiitries.local/index.php?r=site%2Fplacement&player=PlayerTwo';
+                }, 2000);
+
+            }
+
+            else
+
+            {
+                document.write("<h1 align='center'>Игра начинается!</h1>");
+                setTimeout(function () {
+                    document.location.href = 'http://yiitries.local/index.php?r=site%2Fbattle&player=PlayerOne';
+                }, 2000);
+            }
         }
+
     }
 
     else {
@@ -53,14 +104,36 @@ function placeShip(object){
         var col = Number(object.id.substring(1, 2));
 
         for(var i = 0; i < deck_number; i++) {
+
             field_for_placement[row][col + i] = 's';
+
+            $.ajax({
+                url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
+                type: "POST",
+                data: 'x=' + row + '&y=' + String(Number(col) + Number(i)) + '&player=' + player
+                //contentType: "application/json"
+            });
 
         }
             deck_number = pre_field.shift();
         if (deck_number == 0){
-            document.write("Игра начинается!");
-            setTimeout(function () {document.location.href = '/?action=battle';}, 2000);
-            console.log(field_for_placement);
+            if (player == 'PlayerOne') {
+
+                document.write("<h1 align='center'>Расстановка кораблей второго игрока!</h1>");
+                setTimeout(function () {
+                    document.location.href = 'http://yiitries.local/index.php?r=site%2Fplacement&player=PlayerTwo';
+                }, 2000);
+
+            }
+
+            else
+
+            {
+                document.write("<h1 align='center'>Игра начинается!</h1>");
+                setTimeout(function () {
+                    document.location.href = 'http://yiitries.local/index.php?r=site%2Fbattle&player=PlayerOne';
+                }, 2000);
+            }
         }
 
     }
@@ -68,6 +141,7 @@ function placeShip(object){
 }
 
 function defineColor(cell) {
+    //console.log(cell);
 
     var row = Number(cell.id.substring(0, 1));
     var col = Number(cell.id.substring(1, 2));

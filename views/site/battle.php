@@ -1,29 +1,19 @@
-<?php
-
-use app\models\Game;
-
-$current_game = new Game;
-
-?>
-
 <body>
 
-<h1 align="center">Battle</h1>
+<h1 align="center">Бой!</h1>
 
-<div id="users_field" align="center">
+<h3 align="center">Ходит <?=$_GET['player']?></h3>
 
     <script>
-        //ai_field = <?//= json_encode($current_game->ai_field->cells)?>//;
-        //users_field = <?//= json_encode($current_game->users_field->cells)?>//;
 
-        ai_field = <?= json_encode($current_game->ai_field)?>;
-        users_field = <?= json_encode($current_game->users_field)?>;
-
-        playViewForAI();
-        playViewForUser();
+        if(findGetParameter('player') == 'PlayerOne') {
+            playViewForPlayerOne();
+        }
+        else
+        {
+            playViewForPlayerTwo()
+        }
 
     </script>
-
-</div>
 
 </body>

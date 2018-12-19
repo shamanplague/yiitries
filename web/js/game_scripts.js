@@ -1,50 +1,143 @@
-function playViewForAI() {
+function playViewForPlayerOne() {
 
-    document.write("<div style='text-align: center; width: 50%; display: inline-block;'>");
+    fieldForCurrentPlayer = getField('PlayerOne');
+
+    fieldForEnemy = getField('PlayerTwo');
+
+    paintEnemyField();
+
+    paintPlayersField();
+
+}
+
+function playViewForPlayerTwo() {
+
+    fieldForCurrentPlayer = getField('PlayerTwo');
+
+    fieldForEnemy = getField('PlayerOne');
+
+    paintEnemyField();
+
+    paintPlayersField();
+
+}
+
+function paintPlayersField() {
+
+    document.write("<div name='user' style='text-align: center; width: 50%; display: inline-block;'>");
 
     for (var i = 0; i < 10; i++) {
         document.write('<br>');
         for (var j = 0; j < 10; j++) {
-            var index = String(i) + String(j) + '_AI';
-            document.write("<img id = '" + index + "' onclick='move(this)' onmouseout='defineColor(this, ai_field, true) ' onmouseover='makeRed(this)'>");
-
-            defineColor(document.getElementById(index), ai_field, true);
-
-        }
-    }
-
-    document.write('</div>');
-
-}
-
-function move(object) {
-    //console.log(object.id);
-    var x = object.id.substring(0,1);
-    var y = object.id.substring(1,2);
-    //console.log('/?action=battle&x=' + x + '&y=' + y);
-    document.location.href = '/?action=move&x=' + x + '&y=' + y;
-}
-
-function playViewForUser() {
-
-    document.write("<div style='text-align: center; width: 50%; display: inline-block;'>");
-
-    for (i = 0; i < 10; i++) {
-        document.write('<br>');
-        for (j = 0; j < 10; j++) {
             var index = String(i) + String(j);
             document.write("<img id = '" + index + "'>");
 
-            defineColor(document.getElementById(index), users_field);
+            defineColor(document.getElementById(index), fieldForCurrentPlayer);
 
         }
     }
 
     document.write('</div>');
+}
+
+function paintEnemyField() {
+
+    document.write("<div name='enemy' style='text-align: center; width: 50%; display: inline-block;'>");
+
+    for (var i = 0; i < 10; i++) {
+        document.write('<br>');
+        for (var j = 0; j < 10; j++) {
+            var index = String(i) + String(j) + '_Enemy';
+             document.write("<img id = '" + index + "' onclick='move(this)' onmouseout='defineColor(this, fieldForEnemy, true) ' onmouseover='makeRed(this)'>");
+
+            defineColor(document.getElementById(index), fieldForEnemy, true);
+
+        }
+    }
+
+    document.write('</div>');
+}
+
+function getField(owner) {
+
+    var recieved_field = $.ajax({
+        type: "GET",
+        url: "http://yiitries.local/index.php?r=site%2Fgetfield",
+        async: false,
+        data:  'player=' + owner,
+        dataType: 'json'
+    }).responseText;
+
+    recieved_field = JSON.parse(recieved_field);
+
+    var resultField = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());;
+
+    for(var cell in recieved_field){
+        //console.log(recieved_field[cell]);
+        var currentCell = recieved_field[cell];
+        var x = currentCell.x;
+        var y = currentCell.y;
+        var state = currentCell.state;
+        resultField[x][y] = state;
+    }
+
+    return resultField;
+}
+
+function move(object) {
+
+    var row = object.id.substring(0, 1);
+    var col = object.id.substring(1, 2);
+    var nextplayer = (findGetParameter('player') == 'PlayerOne')? 'PlayerTwo':'PlayerOne';
+
+    var hitResult = $.ajax({
+        type: "GET",
+        url: "http://yiitries.local/index.php?r=site%2Fhitresult",
+        async: false,
+        data:  'x=' + row + '&y=' + col + '&player=' + nextplayer,
+        dataType: 'json'
+    }).responseText;
+
+    fieldForEnemy[row][col] = hitResult;
+
+    defineColor(object, fieldForEnemy, true);
+
+    var winner = getWinner();
+
+    if (winner)
+    {
+
+        document.write("<h1 align='center'>Победил " + winner + "</h1>");
+        document.write("<h3 align='center'><a href='/'>На главную</a></h3>");
+
+    }
+
+    if(hitResult == 'm')
+    {
+
+        document.write("<div align ='center'>Переход хода! Теперь бьёт " + nextplayer + "!");
+
+        document.write("<br><a href=http://yiitries.local/index.php?r=site%2Fbattle&player=" + nextplayer + ">Готов!</a></div>")
+
+        // setTimeout(function () {
+        //     document.location.href = 'http://yiitries.local/index.php?r=site%2Fbattle&player=' + nextplayer;
+        // }, 2000);
+
+    }
 
 }
 
-function defineColor(cell, field, forAi=false) {
+function getWinner() {
+    var winner = $.ajax({
+        type: "GET",
+        url: "http://yiitries.local/index.php?r=site%2Fgetwinner",
+        async: false
+    }).responseText;
+
+    return winner;
+}
+
+function defineColor(cell, field, forEnemy=false) {
 
     var row = Number(cell.id.substring(0, 1));
     var col = Number(cell.id.substring(1, 2));
@@ -54,7 +147,7 @@ function defineColor(cell, field, forAi=false) {
             makeBlue(cell);
             break;
         case 's':
-            if(forAi) makeBlue(cell);
+            if(forEnemy) makeBlue(cell);
             else
             makeYellow(cell);
             break;
@@ -92,4 +185,17 @@ function makeCrashed(object){
 
 function makeDestroyed(object){
     object.src = 'img/destroyed.png';
+}
+
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
 }

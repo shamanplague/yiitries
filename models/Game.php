@@ -2,7 +2,8 @@
 
 namespace app\models;
 
-use yii\base\Model;
+use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * Created by PhpStorm.
@@ -11,92 +12,184 @@ use yii\base\Model;
  * Time: 11:37
  */
 
-class game extends Model
+class Game extends ActiveRecord
 {
-    public $users_field;
-    public $ai_field;
-    public $current_player = 'ai';
+
+    public $fieldForPlayerOne;
+    public $fieldForPlayerTwo;
 
     public function __construct()
     {
-//        $this->users_field = new Field();
-//        $this->ai_field = new Field();
+        parent::__construct();
 
-
-        $this->users_field[0] = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field[1] = ["s", "e", "s", "s", "s", "e", "e", "e", "s", "e"];
-        $this->users_field[2] = ["s", "e", "e", "e", "e", "e", "e", "e", "s", "e"];
-        $this->users_field[3] = ["s", "e", "s", "s", "s", "e", "e", "e", "e", "e"];
-        $this->users_field[4] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field[5] = ["e", "e", "e", "e", "e", "s", "e", "s", "e", "e"];
-        $this->users_field[6] = ["e", "s", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->users_field[7] = ["e", "s", "e", "s", "e", "e", "e", "e", "e", "e"];
-        $this->users_field[8] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
-        $this->users_field[9] = ["s", "e", "e", "e", "e", "e", "e", "e", "e", "s"];
-
-        $this->ai_field[0] = ["s", "e", "e", "s", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field[1] = ["s", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field[2] = ["e", "e", "e", "s", "e", "e", "e", "e", "s", "e"];
-        $this->ai_field[3] = ["e", "e", "e", "s", "e", "e", "e", "e", "e", "e"];
-        $this->ai_field[4] = ["e", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
-        $this->ai_field[5] = ["e", "e", "s", "s", "s", "e", "e", "s", "e", "e"];
-        $this->ai_field[6] = ["s", "e", "e", "e", "e", "e", "e", "s", "e", "e"];
-        $this->ai_field[7] = ["e", "e", "e", "e", "e", "e", "e", "e", "e", "e"];
-        $this->ai_field[8] = ["e", "e", "e", "e", "e", "e", "s", "e", "e", "e"];
-        $this->ai_field[9] = ["s", "s", "s", "s", "e", "e", "e", "e", "e", "e"];
+        $this->fieldForPlayerOne = new Field('PlayerOne');
+        $this->fieldForPlayerTwo = new Field('PlayerTwo');
 
     }
 
-    public function hitResult($row, $col){
+    public static function getGame($id){
 
-        if ($this->ai_field[$row][$col] == 's')
-            $this->ai_field[$row][$col] = 'c';
+        $game = new Game;
+
+        $recivedFieldForPlayerOne = Game::find()
+            ->where([
+                'field_owner' => $game->fieldForPlayerOne->getOwner(),
+                'game_id' => $id])
+            ->select(['x','y','state'])
+            ->asArray()
+            ->orderBy('id')
+            ->all();
+
+        foreach ($recivedFieldForPlayerOne as $cell) {
+            $x = $cell['x'];
+            $y = $cell['y'];
+            $state = $cell['state'];
+
+            $game->fieldForPlayerOne->updateCell($x, $y, $state);
+
+        }
+
+
+        $recivedFieldForPlayerTwo = Game::find()
+            ->where([
+                'field_owner' => $game->fieldForPlayerTwo->getOwner(),
+                'game_id' => $id])
+            ->select(['x','y','state'])
+            ->asArray()
+            ->orderBy('id')
+            ->all();
+
+
+        foreach ($recivedFieldForPlayerTwo as $cell) {
+            $x = $cell['x'];
+            $y = $cell['y'];
+            $state = $cell['state'];
+
+            $game->fieldForPlayerTwo->updateCell($x, $y, $state);
+
+        }
+
+        return $game;
+    }
+
+    public function hitResult($x, $y, $player)
+    {
+        switch ($player){
+            case 'PlayerOne':
+
+                $cells = $this->fieldForPlayerOne->getCells();
+
+                foreach ($cells as $cell){
+                    if (($cell->getX() == $x) && ($cell->getY() == $y)){
+                        if ($cell->getState() == 's')
+                        {
+                            $cell->setState('c');
+                        }
+                        else
+                        {
+                            $cell->setState('m');
+                        }
+
+                        return $cell->getState();
+                    }
+                }
+
+                break;
+
+            case 'PlayerTwo':
+
+                $cells = $this->fieldForPlayerTwo->getCells();
+
+                foreach ($cells as $cell){
+                    if (($cell->getX() == $x) && ($cell->getY() == $y)){
+                        if ($cell->getState() == 's')
+                        {
+                            $cell->setState('c');
+                        }
+                        else
+                        {
+                            $cell->setState('m');
+                        }
+
+                        return $cell->getState();
+
+                    }
+                }
+
+                break;
+        }
+
+        return 'x='.$x.'y='.$y.'player='.$player;
+    }
+
+    public function getWinner()
+
+    {
+
+        $result = Game::find()->where([
+            'state' => 's',
+            'field_owner' => 'PlayerTwo'
+        ])->asArray()->count();
+
+        if($result == 0)
+        {
+            return 'PlayerOne';
+        }
         else
-            $this->ai_field[$row][$col] = 'm';
-    }
+        {
+            $result = Game::find()->where([
+                'state' => 's',
+                'field_owner' => 'PlayerOne'
+            ])->asArray()->count();
 
-    public function winner()
-
-    {
-
-        $result_string = '';
-
-        foreach ($this->users_field as $row) {
-            foreach ($row as $cell) {
-                $result_string .= $cell;
+            if($result == 0)
+            {
+                return 'PlayerTwo';
             }
+            else
+            {
+                return false;
+            }
+
         }
 
-        if (stripos($result_string, 's') === false) return 'AI won!';
+    }
 
-        $result_string = '';
+    public function write()
+    {
 
-        foreach ($this->ai_field as $row) {
-            foreach ($row as $cell) {
-                $result_string .= $cell;
-            }
+        Yii::$app->db->createCommand(
+            "DELETE FROM game WHERE id > 0"
+        )->execute();
+
+        $cells = $this->fieldForPlayerOne->getCells();
+
+        foreach ($cells as $cell){
+            Yii::$app->db->createCommand(
+                "INSERT INTO game (game_id, field_owner, x, y, state) VALUES (0, '".
+                $this->fieldForPlayerOne->getOwner()."', ".
+                $cell->getX().", " .
+                $cell->getY().", '" .
+                $cell->getState()."')"
+            )->execute();
         }
 
-        if (stripos($result_string, 's') === false) return 'User won!';
 
-        return false;
-    }
+//        Yii::$app->db->createCommand(
+//            "DELETE FROM game WHERE field_owner='".$this->fieldForPlayerTwo->getOwner()."'"
+//        )->execute();
 
-    public function changePlayer()
-    {
-        $this->current_player = ($this->current_player == 'user')? 'ai':'user';
-    }
+        $cells = $this->fieldForPlayerTwo->getCells();
 
-    public function aiMove()
-    {
-        echo 'ai_move_pre';
-
-        $x = rand(0, 9);
-        $y = rand(0, 9);
-
-        echo 'ai_move x='.$x.'y='.$y;
-
-        $this->users_field[$x][$y] = 'c';
+        foreach ($cells as $cell){
+            Yii::$app->db->createCommand(
+                "INSERT INTO game (game_id, field_owner, x, y, state) VALUES (0, '".
+                $this->fieldForPlayerTwo->getOwner()."', ".
+                $cell->getX().", " .
+                $cell->getY().", '" .
+                $cell->getState()."')"
+            )->execute();
+        }
 
     }
 

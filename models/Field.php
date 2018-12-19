@@ -8,17 +8,62 @@
 
 namespace app\models;
 
+use Yii;
 
 class Field
 {
 
-public $cells;
+private $cells;
+private $owner;
 
-public function __construct()
+public function __construct($user)
 {
-    for ($i = 0; $i < 10; $i++)
-        for ($j = 0; $j < 10; $j++)
-            $this->cells[$i][$j] = 'e';
+
+    $this->owner = $user;
+
+
+    for ($x = 0; $x < 10; $x++)
+        for ($y = 0; $y < 10; $y++)
+            $this->cells[] = new Cell($x, $y);
 }
+
+    /**
+     * @return Cell
+     */
+    public function getCells()
+    {
+        return $this->cells;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param string $owner
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function updateCell($x, $y, $state)
+    {
+        $cells = $this->getCells();
+
+        foreach ($cells as $cell){
+            if (($cell->getX() == $x) && ($cell->getY() == $y))
+                $cell->setState($state);
+        }
+
+    }
+
+    public function writeCell(){
+
+    }
 
 }

@@ -28,7 +28,7 @@ return [
             'identityClass' => 'app\models\User',
         ],
         'request' => [
-            'cookieValidationKey' => 'test',
+            //'cookieValidationKey' => 'test',
             'enableCsrfValidation' => false,
             // but if you absolutely need it set cookie domain to localhost
             /*
