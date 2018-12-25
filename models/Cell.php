@@ -55,12 +55,12 @@ class Cell
 
     public function getCell()
     {
+
         $cell['x'] = $this->getX();
         $cell['y'] = $this->getY();
         $cell['state'] = $this->getState();
         return $cell;
 
-//        return $this;
     }
 
 }

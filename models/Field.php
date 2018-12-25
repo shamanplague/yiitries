@@ -43,26 +43,17 @@ public function __construct($user)
         return $this->owner;
     }
 
-    /**
-     * @param string $owner
-     */
-    public function setOwner($owner)
-    {
-        $this->owner = $owner;
-    }
-
     public function updateCell($x, $y, $state)
     {
-        $cells = $this->getCells();
 
-        foreach ($cells as $cell){
+        foreach ($this->cells as $cell){
             if (($cell->getX() == $x) && ($cell->getY() == $y))
                 $cell->setState($state);
         }
 
-    }
-
-    public function writeCell(){
+        $cellForUpdate = Game::findOne(['field_owner' => $this->owner, 'x' => $x, 'y' => $y]);
+        $cellForUpdate->state = $state;
+        $cellForUpdate->update();
 
     }
 

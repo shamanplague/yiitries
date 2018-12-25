@@ -16,6 +16,8 @@ function filling() {
 
     field_for_placement = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());;
 
+    console.log(recieved_field);
+
     for(var cell in recieved_field){
         //console.log(recieved_field[cell]);
         var currentCell = recieved_field[cell];
@@ -26,6 +28,8 @@ function filling() {
     }
 
     pre_field = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1, 0];
+    shipNames = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
     deck_number = pre_field.shift();
 
     document.write("<h3 align='center'>Расстановка кораблей для " + player + "</h3>");
@@ -64,17 +68,28 @@ function placeShip(object){
 
         var row = Number(object.id.substring(0, 1));
         var col = object.id.substring(1, 2);
+        var ship = [];
+
 
         for(var i = 0; i < deck_number; i++) {
             field_for_placement[row + i][col] = 's';
 
-            $.ajax({
-                url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
-                type: "POST",
-                data: 'x=' + String(Number(row) + Number(i)) + '&y=' + col + '&player=' + player
-            });
+            ship.push({
+                'x': row + i,
+                'y': col
+            })
 
         }
+
+        $.ajax({
+            url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
+            type: "POST",
+            data: 'ship=' + JSON.stringify(ship) + '&player=' + player + '&shipname=' + shipNames.shift(),
+            dataType: 'json'
+        });
+
+
+        //console.log(ship);
 
             deck_number = pre_field.shift();
         if (deck_number == 0) {
@@ -103,18 +118,27 @@ function placeShip(object){
 
         var row = object.id.substring(0, 1);
         var col = Number(object.id.substring(1, 2));
+        var ship = [];
 
         for(var i = 0; i < deck_number; i++) {
 
             field_for_placement[row][col + i] = 's';
 
-            $.ajax({
-                url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
-                type: "POST",
-                data: 'x=' + row + '&y=' + String(Number(col) + Number(i)) + '&player=' + player
-            });
-
+            ship.push({
+                'x': row,
+                'y': col + i
+            })
         }
+
+        $.ajax({
+            url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
+            type: "POST",
+            data: 'ship=' + JSON.stringify(ship) + '&player=' + player + '&shipname=' + shipNames.shift(),
+            dataType: 'json'
+        });
+
+        //console.log(ship);
+
             deck_number = pre_field.shift();
         if (deck_number == 0){
             if (player == 'PlayerOne') {

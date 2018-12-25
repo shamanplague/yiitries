@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use phpDocumentor\Reflection\Types\Array_;
 use yii\db\ActiveRecord;
 
 /**
@@ -25,6 +26,19 @@ class Game extends ActiveRecord
         $this->fieldForPlayerOne = new Field('PlayerOne');
         $this->fieldForPlayerTwo = new Field('PlayerTwo');
 
+    }
+
+    public function defineField($player){
+        switch ($player){
+            case 'PlayerOne':
+                return $this->fieldForPlayerOne;
+                break;
+            case 'PlayerTwo':
+                return $this->fieldForPlayerTwo;
+                break;
+            default:
+                return false;
+        }
     }
 
     public static function getGame($id){
@@ -72,54 +86,31 @@ class Game extends ActiveRecord
         return $game;
     }
 
-    public function hitResult($x, $y, $player)
+    public function getHitResult($x, $y, $player)
     {
-        switch ($player){
-            case 'PlayerOne':
 
-                $cells = $this->fieldForPlayerOne->getCells();
+        $cells = $this->defineField($player)->getCells();
 
                 foreach ($cells as $cell){
                     if (($cell->getX() == $x) && ($cell->getY() == $y)){
                         if ($cell->getState() == 's')
                         {
+
                             $cell->setState('c');
+
                         }
                         else
                         {
                             $cell->setState('m');
                         }
 
-                        return $cell->getState();
-                    }
-                }
-
-                break;
-
-            case 'PlayerTwo':
-
-                $cells = $this->fieldForPlayerTwo->getCells();
-
-                foreach ($cells as $cell){
-                    if (($cell->getX() == $x) && ($cell->getY() == $y)){
-                        if ($cell->getState() == 's')
-                        {
-                            $cell->setState('c');
-                        }
-                        else
-                        {
-                            $cell->setState('m');
-                        }
+                        $this->defineField($player)->updateCell($x, $y, $cell->getState());
 
                         return $cell->getState();
 
                     }
                 }
 
-                break;
-        }
-
-        return true;
     }
 
     public function getWinner()

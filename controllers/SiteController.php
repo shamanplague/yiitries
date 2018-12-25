@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Cell;
+use app\models\Ship;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -160,9 +161,9 @@ class SiteController extends Controller
     {
         $this->layout = 'placement_view';
 
-        $player = (isset($_GET['player']))? $_GET['player']:null;
+        $player = (isset($_GET['player'])) ? $_GET['player'] : null;
 
-        if($player == 'PlayerOne') {
+        if ($player == 'PlayerOne') {
             $game = new Game;
             $game->write();
         }
@@ -174,14 +175,13 @@ class SiteController extends Controller
     public function actionGetfield()
 
     {
-        $player = (isset($_GET['player']))? $_GET['player']:null;
+        $player = (isset($_GET['player'])) ? $_GET['player'] : null;
 
-        $field = Game::find()
-            ->select(['x','y','state'])
-            ->where(['field_owner' => $player])
-            ->asArray()
-            ->orderBy('id')
-            ->all();
+        $currentGame = Game::getGame(0);
+        $recievedField = $currentGame->defineField($player)->getCells();
+        foreach ($recievedField as $cell) {
+            $field[] = $cell->getCell();
+        }
 
         return json_encode($field);
 
@@ -190,14 +190,14 @@ class SiteController extends Controller
     public function actionPlaceship()
 
     {
+        $ship = (isset($_POST['ship'])) ? json_decode($_POST['ship'], true) : null;
+        $player = (isset($_POST['player'])) ? $_POST['player'] : null;
 
-        $x = ( isset($_POST['x']) ) ? $_POST['x']:null;
-        $y = ( isset($_POST['y']) ) ? $_POST['y']:null;
-        $player = ( isset($_POST['player']) ) ? $_POST['player']:null;
+        $currentGame = Game::getGame(0);
 
-        $cellForUpdate = Game::findOne(['field_owner' => $player, 'x' => $x, 'y' => $y]);
-        $cellForUpdate->state = 's';
-        $cellForUpdate->update();
+        foreach ($ship as $deck) {
+            $currentGame->defineField($player)->updateCell($deck['x'], $deck['y'], 's');
+        }
 
     }
 
@@ -209,22 +209,19 @@ class SiteController extends Controller
 
     public function actionHitresult()
     {
-        $x = ( isset($_GET['x']) ) ? $_GET['x']:null;
-        $y = ( isset($_GET['y']) ) ? $_GET['y']:null;
-        $player = ( isset($_GET['player']) ) ? $_GET['player']:null;
+        $x = (isset($_GET['x'])) ? $_GET['x'] : null;
+        $y = (isset($_GET['y'])) ? $_GET['y'] : null;
+        $player = (isset($_GET['player'])) ? $_GET['player'] : null;
 
         $currentGame = Game::getGame(0);
-        $result =  $currentGame->hitResult($x, $y, $player);
-
-        $cellForUpdate = Game::findOne(['field_owner' => $player, 'x' => $x, 'y' => $y]);
-        $cellForUpdate->state = $result;
-        $cellForUpdate->update();
+        $result = $currentGame->getHitResult($x, $y, $player);
 
         return $result;
 
     }
 
-    public function actionGetwinner(){
+    public function actionGetwinner()
+    {
         $currentGame = Game::getGame(0);
         return $currentGame->getWinner();
     }
