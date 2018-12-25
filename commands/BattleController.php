@@ -14,57 +14,70 @@ class BattleController extends Controller
 
         while ($currentDecking = array_shift($decking)) {
 
-            echo "Расстановка кораблей игрока " . $player . "\n\n";
-
-            $recievedField = $this->getField($player);
-
-            $count = 0;
-            $rowNumber = 0;
-
-            echo "* A B C D E F G H I J";
-            foreach ($recievedField as $cell) {
-                if ($count % 10 == 0) {
-                    echo "\n" . $rowNumber . ' ';
-                    $rowNumber++;
-                };
-                echo $cell->getState() . " ";
-                $count++;
-            }
-
-            echo "\n\n";
-
             do {
+
+                echo "Расстановка кораблей игрока " . $player . "\n\n";
+
+                echo "Разместите " . $currentDecking . "-палубный корабль: \n\n";
+
+                $recievedField = $this->getField($player);
+
+                $count = 0;
+                $rowNumber = 0;
+
+                echo "* A B C D E F G H I J";
+                foreach ($recievedField as $cell) {
+                    if ($count % 10 == 0) {
+                        echo "\n" . $rowNumber . ' ';
+                        $rowNumber++;
+                    };
+                    echo $cell->getState() . " ";
+                    $count++;
+                }
+
+                echo "\n\n";
+
                 echo "Укажите следующую палубу в формате 'xyd', где\r\n" .
                     " x - координата строки \r\n y - координата столбца \r\n" .
-                    " d - направление (v - для вертикального расположения, h - для горизонтального): \n";
+                    " d - направление (v - для вертикального расположения(вниз от указаной точки), h - для горизонтального(вправо от указаной точки)): \n";
 
                 $move = readline();
 
-            } while (!preg_match('/^[a-j]\d[vh]$/', $move));
 
-            $y = (integer)ord(substr($move, 0, 1)) - 97;
-            $x = (integer)substr($move, 1, 1);
-            $direction = substr($move, 2, 1);
+                $y = (integer)ord(substr($move, 0, 1)) - 97;
+                $x = (integer)substr($move, 1, 1);
+                $direction = substr($move, 2, 1);
 
-            $ship = [];
+                $ship = [];
 
-            if ($direction == 'h') {
-                for ($i = 0; $i < $currentDecking; $i++) {
-                    $ship[] = array("x" => $x, "y" => $y + $i);
+                if ($direction == 'h') {
+                    for ($i = 0; $i < $currentDecking; $i++) {
+                        $ship[] = array("x" => $x, "y" => $y + $i);
+                    }
+
+
+                    $placeResult = $this->placeShip($ship, $player);
+
+                    system('clear');
+
+                    if ($placeResult) echo "Корабль установлен\n";
+                    else echo "Недопустимая позиция\n";
+
+
+                } else {
+                    for ($i = 0; $i < $currentDecking; $i++) {
+                        $ship[] = array("x" => $x + $i, "y" => $y);
+                    }
+
+                    $placeResult = $this->placeShip($ship, $player);
+
+                    system('clear');
+
+                    if ($placeResult) echo "Корабль установлен\n";
+                    else echo "Недопустимая позиция\n";
                 }
 
-                $this->placeShip($ship, $player);
-
-                system('clear');
-            } else {
-                for ($i = 0; $i < $currentDecking; $i++) {
-                    $ship[] = array("x" => $x + $i, "y" => $y);
-                }
-
-                $this->placeShip($ship, $player);
-
-                system('clear');
-            }
+            } while (!preg_match('/^[a-j]\d[vh]$/', $move) || $placeResult == false);
 
 
         }
@@ -86,10 +99,18 @@ class BattleController extends Controller
 
         $currentGame = Game::getGame(0);
 
-        foreach ($ship as $deck) {
+        if ($currentGame->defineField($player)->isAvailable($ship)) {
 
-            $currentGame->defineField($player)->updateCell($deck['x'], $deck['y'], 's');
+            foreach ($ship as $deck) {
 
+                $currentGame->defineField($player)->updateCell($deck['x'], $deck['y'], 's');
+
+            }
+
+            return 'Success!';
+
+        } else {
+            return false;
         }
 
     }

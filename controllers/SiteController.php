@@ -190,14 +190,24 @@ class SiteController extends Controller
     public function actionPlaceship()
 
     {
+
+
         $ship = (isset($_POST['ship'])) ? json_decode($_POST['ship'], true) : null;
         $player = (isset($_POST['player'])) ? $_POST['player'] : null;
 
         $currentGame = Game::getGame(0);
 
-        foreach ($ship as $deck) {
-            $currentGame->defineField($player)->updateCell($deck['x'], $deck['y'], 's');
+        if ($currentGame->defineField($player)->isAvailable($ship)) {
+
+            foreach ($ship as $deck) {
+                $currentGame->defineField($player)->updateCell($deck['x'], $deck['y'], 's');
+            }
+
+            return 'Success!';
+
         }
+
+        return false;
 
     }
 

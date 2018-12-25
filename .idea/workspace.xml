@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5dcdf8f4-722f-4e19-9691-e9050b6a3c21" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commands/BattleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/commands/BattleController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/SiteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/SiteController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/Cell.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/Cell.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/Field.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/Field.php" afterDir="false" />
@@ -34,11 +34,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/commands/BattleController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
+            <state relative-caret-position="706">
+              <caret line="222" column="5" selection-start-line="222" selection-start-column="5" selection-end-line="222" selection-end-column="5" />
               <folding>
                 <element signature="e#33#60#0#PHP" expanded="true" />
               </folding>
@@ -49,8 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/Cell.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="616">
-              <caret line="57" selection-start-line="57" selection-end-line="57" />
+            <state relative-caret-position="736">
+              <caret line="65" selection-end-line="66" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -58,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/SiteController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="216" column="40" selection-start-line="216" selection-start-column="35" selection-end-line="216" selection-end-column="40" />
+            <state relative-caret-position="361">
+              <caret line="199" column="69" selection-end-line="239" />
             </state>
           </provider>
         </entry>
@@ -67,17 +67,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/Field.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="40" column="23" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
+            <state relative-caret-position="211">
+              <caret line="70" column="12" selection-end-line="105" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/Game.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1170">
-              <caret line="79" column="36" lean-forward="true" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
+            <state relative-caret-position="-655">
+              <caret line="88" column="49" lean-forward="true" selection-start-line="88" selection-start-column="49" selection-end-line="88" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -108,6 +108,12 @@
       <find>getFi</find>
       <find>getFie</find>
       <find>hitRe</find>
+      <find>ava</find>
+      <find>cons</find>
+      <find>ОК</find>
+      <find>cle</find>
+      <find>forea</find>
+      <find>con</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -160,12 +166,12 @@
         <option value="$PROJECT_DIR$/web/js/game_scripts.js" />
         <option value="$PROJECT_DIR$/migrations/m181219_123829_create_ships_table.php" />
         <option value="$PROJECT_DIR$/commands/SiteController.php" />
-        <option value="$PROJECT_DIR$/web/js/placement_scripts.js" />
         <option value="$PROJECT_DIR$/models/Ship.php" />
-        <option value="$PROJECT_DIR$/models/Cell.php" />
-        <option value="$PROJECT_DIR$/models/Field.php" />
+        <option value="$PROJECT_DIR$/web/js/placement_scripts.js" />
         <option value="$PROJECT_DIR$/models/Game.php" />
+        <option value="$PROJECT_DIR$/models/Cell.php" />
         <option value="$PROJECT_DIR$/controllers/SiteController.php" />
+        <option value="$PROJECT_DIR$/models/Field.php" />
         <option value="$PROJECT_DIR$/commands/BattleController.php" />
       </list>
     </option>
@@ -383,12 +389,12 @@
       <workItem from="1540812966655" duration="7656000" />
       <workItem from="1542893608137" duration="16878000" />
       <workItem from="1543653975199" duration="8000" />
-      <workItem from="1545644627263" duration="31183000" />
+      <workItem from="1545644627263" duration="40838000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="275169000" />
+    <option name="totallyTimeSpent" value="284824000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="25" width="1282" height="1000" extended-state="6" />
@@ -645,13 +651,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/js/placement_scripts.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="18" column="30" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/Ship.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -677,41 +676,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/commands/BattleController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
-          <folding>
-            <element signature="e#33#60#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/Cell.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="57" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="736">
+          <caret line="65" selection-end-line="66" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/SiteController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="216" column="40" selection-start-line="216" selection-start-column="35" selection-end-line="216" selection-end-column="40" />
+        <state relative-caret-position="361">
+          <caret line="199" column="69" selection-end-line="239" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/Field.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="40" column="23" selection-start-line="40" selection-start-column="23" selection-end-line="40" selection-end-column="23" />
+        <state relative-caret-position="211">
+          <caret line="70" column="12" selection-end-line="105" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/Game.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="79" column="36" lean-forward="true" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
+        <state relative-caret-position="-655">
+          <caret line="88" column="49" lean-forward="true" selection-start-line="88" selection-start-column="49" selection-end-line="88" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/js/placement_scripts.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2035">
+          <caret line="140" selection-start-line="140" selection-end-line="140" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/commands/BattleController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="706">
+          <caret line="222" column="5" selection-start-line="222" selection-start-column="5" selection-end-line="222" selection-end-column="5" />
+          <folding>
+            <element signature="e#33#60#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

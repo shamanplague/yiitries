@@ -11,12 +11,10 @@ use yii\db\ActiveRecord;
  * Date: 01.12.18
  * Time: 11:37
  */
-
 class Game extends ActiveRecord
 {
 
     private $fieldForPlayerOne;
-
     private $fieldForPlayerTwo;
 
     public function __construct()
@@ -28,8 +26,9 @@ class Game extends ActiveRecord
 
     }
 
-    public function defineField($player){
-        switch ($player){
+    public function defineField($player)
+    {
+        switch ($player) {
             case 'PlayerOne':
                 return $this->fieldForPlayerOne;
                 break;
@@ -41,7 +40,8 @@ class Game extends ActiveRecord
         }
     }
 
-    public static function getGame($id){
+    public static function getGame($id)
+    {
 
         $game = new Game;
 
@@ -49,7 +49,7 @@ class Game extends ActiveRecord
             ->where([
                 'field_owner' => $game->fieldForPlayerOne->getOwner(),
                 'game_id' => $id])
-            ->select(['x','y','state'])
+            ->select(['x', 'y', 'state'])
             ->asArray()
             ->orderBy('id')
             ->all();
@@ -68,7 +68,7 @@ class Game extends ActiveRecord
             ->where([
                 'field_owner' => $game->fieldForPlayerTwo->getOwner(),
                 'game_id' => $id])
-            ->select(['x','y','state'])
+            ->select(['x', 'y', 'state'])
             ->asArray()
             ->orderBy('id')
             ->all();
@@ -91,25 +91,23 @@ class Game extends ActiveRecord
 
         $cells = $this->defineField($player)->getCells();
 
-                foreach ($cells as $cell){
-                    if (($cell->getX() == $x) && ($cell->getY() == $y)){
-                        if ($cell->getState() == 's')
-                        {
+        foreach ($cells as $cell) {
+            if (($cell->getX() == $x) && ($cell->getY() == $y)) {
+                if ($cell->getState() == 's') {
 
-                            $cell->setState('c');
+                    $cell->setState('c');
 
-                        }
-                        else
-                        {
-                            $cell->setState('m');
-                        }
-
-                        $this->defineField($player)->updateCell($x, $y, $cell->getState());
-
-                        return $cell->getState();
-
-                    }
+                } else {
+                    $cell->setState('m');
                 }
+
+                $this->defineField($player)->updateCell($x, $y, $cell->getState());
+
+                return $cell->getState();
+
+            }
+        }
+        return false;
 
     }
 
@@ -122,23 +120,17 @@ class Game extends ActiveRecord
             'field_owner' => 'PlayerTwo'
         ])->asArray()->count();
 
-        if($result == 0)
-        {
+        if ($result == 0) {
             return 'PlayerOne';
-        }
-        else
-        {
+        } else {
             $result = Game::find()->where([
                 'state' => 's',
                 'field_owner' => 'PlayerOne'
             ])->asArray()->count();
 
-            if($result == 0)
-            {
+            if ($result == 0) {
                 return 'PlayerTwo';
-            }
-            else
-            {
+            } else {
                 return false;
             }
 
@@ -153,7 +145,7 @@ class Game extends ActiveRecord
 
         $cells = $this->fieldForPlayerOne->getCells();
 
-        foreach ($cells as $cell){
+        foreach ($cells as $cell) {
 
             $gameForRecord = new Game();
             $gameForRecord->game_id = 0;
@@ -170,7 +162,7 @@ class Game extends ActiveRecord
 
         $cells = $this->fieldForPlayerOne->getCells();
 
-        foreach ($cells as $cell){
+        foreach ($cells as $cell) {
 
             $gameForRecord = new Game();
             $gameForRecord->game_id = 0;

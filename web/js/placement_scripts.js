@@ -12,11 +12,11 @@ function filling() {
 
     recieved_field = JSON.parse(recieved_field);
 
-    console.log(recieved_field);
+    //console.log(recieved_field);
 
     field_for_placement = Array(Array(), Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array(),Array());;
 
-    console.log(recieved_field);
+    //console.log(recieved_field);
 
     for(var cell in recieved_field){
         //console.log(recieved_field[cell]);
@@ -130,14 +130,14 @@ function placeShip(object){
             })
         }
 
-        $.ajax({
+        var result = $.ajax({
             url: 'http://yiitries.local/index.php?r=site%2Fplaceship',
             type: "POST",
             data: 'ship=' + JSON.stringify(ship) + '&player=' + player + '&shipname=' + shipNames.shift(),
             dataType: 'json'
         });
 
-        //console.log(ship);
+        console.log(result);
 
             deck_number = pre_field.shift();
         if (deck_number == 0){
